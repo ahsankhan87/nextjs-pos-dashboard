@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     "app/lib/placeholder-data.js",
     "scripts/seed.js"
-  ],
+, "app/dashboard/customers/page.tsx"  ],
   "exclude": ["node_modules"]
 }

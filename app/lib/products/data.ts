@@ -1,7 +1,7 @@
 'use server';
 import { executeQuery } from '../db';
 import {
-    CustomersTable_1
+    ProductsField
 } from '../../lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -18,16 +18,15 @@ import { unstable_noStore as noStore } from 'next/cache';
 //         return error + ' Failed to fetch revenue data';
 //     }
 // }
-export async function fetchCustomers() {
+
+export async function fetchProducts() {
     noStore();
     try {
-        // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
-
-        const results = await executeQuery<CustomersTable_1[]>('SELECT * FROM pos_customers');
-        //console.log(results);
+        const results = await executeQuery<ProductsField[]>('SELECT item_id,name FROM pos_items');
+        console.log(results);
         return results;
     } catch (error) {
         console.log(error);
-        return error + ' Failed to fetch customers data';
+        return error + ' Failed to fetch products data';
     }
 }
