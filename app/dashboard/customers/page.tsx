@@ -2,15 +2,16 @@ import { fetchCustomers } from '@/app/lib/customers/data';
 import { Metadata } from 'next';
 import { lusitana } from '@/app/ui/fonts';
 import {
-    CustomersTable_1
+    CustomersTable
 } from '../../lib/definitions';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
     title: 'Customers',
 };
 
 export default async function Page() {
-    const customers: CustomersTable_1[] = await fetchCustomers();
+    const customers: CustomersTable[] = await fetchCustomers();
     // const customers : CustomersTable_1= JSON.parse(data);
     return (
         <div className="w-full">
@@ -50,27 +51,27 @@ export default async function Page() {
                                         <tr key={customer.id} className="group">
                                             <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                                                 <div className="flex items-center gap-3">
-                                                    {/* <Image
+                                                    <Image
                                                         src={customer.image_url}
                                                         className="rounded-full"
                                                         alt={`${customer.name}'s profile picture`}
                                                         width={28}
                                                         height={28}
-                                                    /> */}
-                                                    <p>{customer.first_name}</p>
+                                                    />
+                                                    <p>{customer.name}</p>
                                                 </div>
                                             </td>
                                             <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                                                 {customer.email}
                                             </td>
                                             <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                                                {customer.store_name}
+
                                             </td>
                                             <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                                                {customer.phone_no}
+
                                             </td>
                                             <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
-                                                {customer.city}
+
                                             </td>
                                         </tr>
                                     ))}
