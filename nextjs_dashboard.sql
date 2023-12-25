@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2023 at 06:52 PM
+-- Generation Time: Dec 25, 2023 at 06:53 PM
 -- Server version: 5.7.14
 -- PHP Version: 7.1.10
 
@@ -39,7 +39,9 @@ CREATE TABLE `customers` (
 
 INSERT INTO `customers` (`id`, `name`, `email`, `image_url`) VALUES
 (1, 'Delba de Oliveira', 'delba@oliveira.com', '/customers/delba-de-oliveira.png'),
-(2, 'Lee Robinson', 'lee@robinson.com', '/customers/lee-robinson.png');
+(2, 'Lee Robinson', 'lee@robinson.com', '/customers/lee-robinson.png'),
+(3, 'Balazs Orban', 'balazs@orban.com', '/customers/balazs-orban.png'),
+(4, 'Amy Burns', 'amy@burns.com', '/customers/amy-burns.png');
 
 -- --------------------------------------------------------
 
@@ -61,7 +63,9 @@ CREATE TABLE `invoices` (
 
 INSERT INTO `invoices` (`id`, `customer_id`, `amount`, `status`, `date`) VALUES
 (1, 1, 15795, 'pending', '2022-12-06'),
-(2, 1, 3040, 'paid', '2022-10-29');
+(2, 1, 3040, 'paid', '2022-10-29'),
+(3, 2, 3040, 'paid', '2022-10-29'),
+(4, 3, 44800, 'paid', '2023-09-10');
 
 -- --------------------------------------------------------
 
@@ -100,7 +104,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
-(1, 'User ', 'user@nextmail.com', '123456');
+(1, 'User ', 'user@nextmail.com', '$2b$10$0Zgfrtk9Cb2Z10SA9zkFgeMS0Ds0Mfd8.hhGQ3HDQScf0EW2wa2IK'),
+(2, 'Ahsan', 'ahsan@gmail.com', '$2b$10$DLdPgHyDqmylMNZhhdt83uZAqxhzozd4DOdckB9r2YSCT570vpk96');
 
 --
 -- Indexes for dumped tables
@@ -138,17 +143,17 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `customers`
 --
 ALTER TABLE `customers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

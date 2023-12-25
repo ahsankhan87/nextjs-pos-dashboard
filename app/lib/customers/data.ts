@@ -1,7 +1,7 @@
 'use server';
 import { executeQuery } from '../db';
 import {
-    CustomersTable
+    FormattedCustomersTable
 } from '../../lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -23,7 +23,7 @@ export async function fetchCustomers() {
     try {
         // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
 
-        const results = await executeQuery<CustomersTable[]>('SELECT * FROM pos_customers');
+        const results = await executeQuery<FormattedCustomersTable>('SELECT * FROM customers');
         //console.log(results);
         return results;
     } catch (error) {
