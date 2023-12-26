@@ -4,6 +4,7 @@ import { executeQuery } from './db';
 import {
   CustomerField,
   CustomersTable,
+  FormattedCustomersTable,
   InvoiceForm,
   InvoicesTable,
   LatestInvoiceRaw,
@@ -24,7 +25,7 @@ export async function fetchRevenue() {
     // console.log('Fetching revenue data...');
     // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const data = await executeQuery<Revenue>(`SELECT * FROM revenue`);
+    const data = await executeQuery<Revenue>(`SELECT sales_month as month, total_sales as revenue FROM monthly_sales_view`);
     return data;
 
   } catch (error) {
@@ -37,10 +38,10 @@ export async function fetchLatestInvoices() {
   noStore();
   try {
     const data = await executeQuery<LatestInvoiceRaw>(`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
-      ORDER BY invoices.date DESC
+      SELECT pos_sales.amount, customers.name, customers.image_url, customers.email, pos_sales.sale_id
+      FROM pos_sales
+      JOIN customers ON pos_sales.customer_id = customers.id
+      ORDER BY pos_sales.date DESC
       LIMIT 5`);
 
     const latestInvoices = data.map((invoice) => ({
@@ -60,12 +61,13 @@ export async function fetchCardData() {
     // You can probably combine these into a single SQL query
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
-    const invoiceCountPromise = executeQuery(`SELECT COUNT(*) as count FROM invoices`);
-    const customerCountPromise = executeQuery(`SELECT COUNT(*) as count FROM customers`);
-    const invoiceStatusPromise = executeQuery(`SELECT
-         SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-         SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-         FROM invoices`);
+    const invoiceCountPromise = executeQuery(`SELECT COUNT(*) as count FROM pos_sales`);
+    const customerCountPromise = executeQuery(`SELECT COUNT(*) as count FROM pos_customers`);
+    const invoiceStatusPromise = 0;
+    // executeQuery(`SELECT
+    //      SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
+    //      SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
+    //      FROM invoices`);
 
     const data: any = await Promise.all([
       invoiceCountPromise,
@@ -100,22 +102,20 @@ export async function fetchFilteredInvoices(
   try {
     const invoices = await executeQuery<InvoicesTable>(`
       SELECT
-        invoices.id,
-        invoices.amount,
-        invoices.date,
-        invoices.status,
-        customers.name,
+        pos_sales.sale_id,
+        pos_sales.total_amount,
+        pos_sales.sales_date,
+        customers.first_name,
         customers.email,
-        customers.image_url
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
+      FROM pos_sales
+      JOIN pos_customers ON pos_sales.customer_id = pos_customers.id
       WHERE
         customers.name LIKE '%${query}%' OR
         customers.email LIKE '%${query}%' OR
-        invoices.amount LIKE '%${query}%' OR
-        invoices.date LIKE '%${query}%' OR
-        invoices.status LIKE '%${query}%'
-      ORDER BY invoices.date DESC
+        pos_sales.amount LIKE '%${query}%' OR
+        pos_sales.date LIKE '%${query}%' OR
+        pos_sales.status LIKE '%${query}%'
+      ORDER BY pos_sales.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `);
     //console.log(invoices);
@@ -139,7 +139,7 @@ export async function fetchInvoicesPages(query: string) {
       invoices.date LIKE '%${query}%' OR
       invoices.status LIKE '%${query}%'
   `);
-    
+
     const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
     console.log(totalPages);
     return totalPages;
@@ -181,7 +181,7 @@ export async function fetchCustomers() {
       SELECT
         id,
         name
-      FROM customers
+      FROM pos_customers
       ORDER BY name ASC
     `);
 
@@ -196,28 +196,16 @@ export async function fetchCustomers() {
 export async function fetchFilteredCustomers(query: string) {
   noStore();
   try {
-    const data = await executeQuery<CustomersTable>(`
+    const data = await executeQuery<FormattedCustomersTable>(`
 		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
-		WHERE
-		  customers.name LIKE '%${query}%' OR
-        customers.email LIKE '%${query}%'
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
+		  *
+		FROM pos_customers
+		ORDER BY pos_customers.name ASC
 	  `);
 
     const customers = data.map((customer) => ({
       ...customer,
-      total_pending: formatCurrency(customer.total_pending),
-      total_paid: formatCurrency(customer.total_paid),
+
     }));
 
     return customers;

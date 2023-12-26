@@ -78,14 +78,22 @@ export type CustomersTable_1 = {
 };
 export type FormattedCustomersTable = {
   id: string;
-  name: string;
+  first_name: string;
+  last_name: string;
   email: string;
-  image_url: string;
-  total_invoices: number;
-  total_pending: string;
-  total_paid: string;
-};
 
+};
+export type CompaniesTable = {
+  id: string;
+  name: string;
+  contact_no: string;
+  email: string;
+  address: string;
+  image: string;
+  locked: boolean;
+  expire: string;
+
+};
 export type CustomerField = {
   id: string;
   name: string;

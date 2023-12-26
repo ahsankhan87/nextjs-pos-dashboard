@@ -1,7 +1,7 @@
 'use server';
 import { executeQuery } from '../db';
 import {
-    FormattedCustomersTable
+    CompaniesTable
 } from '../../lib/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -23,11 +23,12 @@ export async function fetchCustomers() {
     try {
         // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
 
-        const results = await executeQuery<FormattedCustomersTable>('SELECT * FROM customers');
+        const results = await executeQuery<CompaniesTable>('SELECT * FROM companies');
         //console.log(results);
         return results;
     } catch (error) {
-        console.log(error);
-        return error + ' Failed to fetch customers data';
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch all customers.');
     }
+
 }

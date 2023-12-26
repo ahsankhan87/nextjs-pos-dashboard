@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 import CustomersTable from '@/app/ui/customers/table';
 
 import {
-    FormattedCustomersTable
+    CompaniesTable
 } from '../../lib/definitions';
 import Image from 'next/image';
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-    const customers: FormattedCustomersTable[] | any[] = await fetchCustomers();
+    const customers: CompaniesTable[] | any[] = await fetchCustomers();
     // const customers : CustomersTable_1= JSON.parse(data);
     return (
         <Suspense>
