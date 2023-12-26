@@ -118,7 +118,7 @@ export async function fetchFilteredInvoices(
       ORDER BY invoices.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `);
-    console.log(invoices);
+    //console.log(invoices);
     return invoices;
   } catch (error) {
     console.error('Database Error:', error);
@@ -139,8 +139,9 @@ export async function fetchInvoicesPages(query: string) {
       invoices.date LIKE '%${query}%' OR
       invoices.status LIKE '%${query}%'
   `);
-    console.log(count);
-    const totalPages = Math.ceil(Number(count) / ITEMS_PER_PAGE);
+    
+    const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
+    console.log(totalPages);
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
@@ -166,7 +167,7 @@ export async function fetchInvoiceById(id: string) {
       // Convert amount from cents to dollars
       amount: invoice.amount / 100,
     }));
-    console.log(invoice); // Invoice is an empty array []
+    // Invoice is an empty array []
     return invoice[0];
   } catch (error) {
     console.error('Database Error:', error);
