@@ -22,6 +22,9 @@ export async function fetchCustomers() {
     noStore();
     try {
         // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
+        // console.log('Fetching customer data...');
+        // await new Promise((resolve) => setTimeout(resolve, 3000));
+        // console.log('Fetched data after 3 second...');
 
         const results = await executeQuery<CompaniesTable>('SELECT * FROM companies');
         //console.log(results);

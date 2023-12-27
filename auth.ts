@@ -10,7 +10,7 @@ import { executeQuery } from '@/app/lib/db';
 async function getUser(email: string): Promise<User | undefined> {
 
   try {
-    const results = await executeQuery<User>(`SELECT * FROM users WHERE email='${email}'`);
+    const results = await executeQuery<User>(`SELECT * FROM dashboard_users WHERE email='${email}'`);
     //console.log(results);
     return results[0];
   } catch (error) {

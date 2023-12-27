@@ -22,8 +22,8 @@ import { unstable_noStore as noStore } from 'next/cache';
 export async function fetchProducts() {
     noStore();
     try {
-        const results = await executeQuery<ProductsField[]>('SELECT item_id,name FROM pos_items');
-        console.log(results);
+        const results = await executeQuery<ProductsField[]>('SELECT * FROM pos_items');
+        // console.log(results);
         return results;
     } catch (error) {
         console.log(error);

@@ -2,6 +2,8 @@ import Image from 'next/image';
 import { lusitana } from '@/app/ui/fonts';
 import Search from '@/app/ui/search';
 import { CustomersTable, CompaniesTable } from '@/app/lib/definitions';
+import Link from 'next/link';
+import { ActivateCompanyBtn, DeactivateCompanyBtn } from '@/app/ui/customers/buttons'
 
 export default async function CustomersTable({
   customers,
@@ -32,7 +34,7 @@ export default async function CustomersTable({
                           </div>
                         </div>
                         <p className="text-sm text-gray-500">
-                          {customer.email}
+                          {new Date(customer.expire * 1000).toDateString()}
                         </p>
                       </div>
                     </div>
@@ -57,6 +59,9 @@ export default async function CustomersTable({
                     </th>
                     <th scope="col" className="px-4 py-5 font-medium">
                       Expiry Date
+                    </th>
+                    <th scope="col" className="relative py-3 pl-6 pr-3">
+                      <span className="sr-only">Edit</span>
                     </th>
                   </tr>
                 </thead>
@@ -86,7 +91,14 @@ export default async function CustomersTable({
                         {customer.locked}
                       </td>
                       <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
-                        {customer.expire}
+                        {new Date(customer.expire * 1000).toDateString()}
+
+                      </td>
+                      <td className="whitespace-nowrap py-1 pr-3">
+                        <div className="flex justify-end gap-2">
+                          <ActivateCompanyBtn id={customer.id} />
+                          <DeactivateCompanyBtn id={customer.id} />
+                        </div>
                       </td>
                     </tr>
                   ))}

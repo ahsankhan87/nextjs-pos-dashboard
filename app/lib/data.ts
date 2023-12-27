@@ -218,7 +218,7 @@ export async function fetchFilteredCustomers(query: string) {
 export async function getUser(email: string) {
   noStore();
   try {
-    const user = await executeQuery(`SELECT * from USERS where email=${email}`);
+    const user = await executeQuery(`SELECT * from dashboard_users where email=${email}`);
     return user[0] as User;
   } catch (error) {
     console.error('Failed to fetch user:', error);

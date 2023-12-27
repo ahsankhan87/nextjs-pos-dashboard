@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import { lusitana } from '@/app/ui/fonts';
 import { Suspense } from 'react';
 import CustomersTable from '@/app/ui/customers/table';
+import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 
 import {
     CompaniesTable
@@ -17,8 +18,8 @@ export default async function Page() {
     const customers: CompaniesTable[] | any[] = await fetchCustomers();
     // const customers : CustomersTable_1= JSON.parse(data);
     return (
-        <Suspense>
-            <CustomersTable customers={customers} />
-        </Suspense>
+        <Suspense fallback={<InvoicesTableSkeleton />}>
+            < CustomersTable customers={customers} />
+        </Suspense >
     );
 }
