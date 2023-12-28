@@ -62,7 +62,7 @@ export async function fetchCardData() {
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
     const invoiceCountPromise = executeQuery(`SELECT COUNT(*) as count FROM pos_sales`);
-    const customerCountPromise = executeQuery(`SELECT COUNT(*) as count FROM pos_customers`);
+    const customerCountPromise = executeQuery(`SELECT COUNT(*) as count FROM companies`);
     const invoiceStatusPromise = 0;
     // executeQuery(`SELECT
     //      SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
@@ -74,11 +74,12 @@ export async function fetchCardData() {
       customerCountPromise,
       invoiceStatusPromise,
     ]);
-
-    const numberOfInvoices = Number(data[0].count ?? '0');
-    const numberOfCustomers = Number(data[1].count ?? '0');
+    
+    const numberOfInvoices = Number(data[0][0].count ?? '0');
+    const numberOfCustomers = Number(data[1][0].count ?? '0');
     const totalPaidInvoices = formatCurrency(data[2].paid ?? '0');
     const totalPendingInvoices = formatCurrency(data[2].pending ?? '0');
+    
 
     return {
       numberOfCustomers,
@@ -129,7 +130,7 @@ export async function fetchFilteredInvoices(
 export async function fetchInvoicesPages(query: string) {
   noStore();
   try {
-    const count = await executeQuery(`SELECT COUNT(*) as count
+    const count:any = await executeQuery(`SELECT COUNT(*) as count
     FROM invoices
     JOIN customers ON invoices.customer_id = customers.id
     WHERE
@@ -141,7 +142,7 @@ export async function fetchInvoicesPages(query: string) {
   `);
 
     const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
-    console.log(totalPages);
+    //console.log(totalPages);
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
