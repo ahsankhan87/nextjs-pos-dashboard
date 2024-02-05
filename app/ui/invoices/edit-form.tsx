@@ -20,7 +20,7 @@ export default function EditInvoiceForm({
   customers: CustomerField[];
 }) {
   const initialState = { message: null, errors: {} };
-  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const updateInvoiceWithId = updateInvoice.bind(null, invoice.sale_id);
   const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
 
   return (
@@ -44,7 +44,7 @@ export default function EditInvoiceForm({
               </option>
               {customers.map((customer) => (
                 <option key={customer.id} value={customer.id}>
-                  {customer.name}
+                  {customer.first_name}
                 </option>
               ))}
             </select>
@@ -71,7 +71,7 @@ export default function EditInvoiceForm({
                 id="amount"
                 name="amount"
                 type="number"
-                defaultValue={invoice.amount}
+                defaultValue={invoice.total_amount}
                 placeholder="Enter USD amount"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />

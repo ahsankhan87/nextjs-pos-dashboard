@@ -1,11 +1,10 @@
 {
   "private": true,
+  "homepage": "https://pos3.khanmotorsthailand.com/",
   "scripts": {
+    "dev": "node server.js",
     "build": "next build",
-    "dev": "next dev",
-    "start": "next start",
-    "seed": "node -r dotenv/config ./scripts/seed.js",
-    "lint": "next lint"
+    "start": "NODE_ENV=production node server.js"
   },
   
   "dependencies": {
@@ -32,8 +31,8 @@
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.14",
     "dotenv": "^16.3.1",
-    "eslint": "^8.52.0",
-    "eslint-config-next": "^14.0.0",
+    "eslint": "^7.23.0",
+    "eslint-config-next": "^11.0.1",
     "prettier": "^3.0.3"
   },
   "engines": {

@@ -1,6 +1,6 @@
 // import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 // import Link from 'next/link';
-import { activateCompany, deactivateCompany } from '@/app/lib/customers/actions';
+import { activateCompany, deactivateCompany } from '@/app/lib/products/actions';
 
 export function ActivateCompanyBtn({ id }: { id: string }) {
     const activateCompanyWithId = activateCompany.bind(null, id);

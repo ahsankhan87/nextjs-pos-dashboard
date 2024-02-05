@@ -1,8 +1,8 @@
 'use server';
 import { executeQuery } from '../db';
 import {
-    CompaniesTable
-} from '../../lib/definitions';
+  CustomersTable
+} from '../../lib/customers/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
 // export async function fetchCustomers() {
@@ -19,66 +19,69 @@ import { unstable_noStore as noStore } from 'next/cache';
 //     }
 // }
 export async function fetchCustomers() {
-    noStore();
-    try {
-        // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
-        // console.log('Fetching customer data...');
-        // await new Promise((resolve) => setTimeout(resolve, 3000));
-        // console.log('Fetched data after 3 second...');
+  noStore();
+  try {
+    // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
+    // console.log('Fetching customer data...');
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    // console.log('Fetched data after 3 second...');
 
-        const results = await executeQuery<CompaniesTable>('SELECT * FROM companies');
-        //console.log(results);
-        return results;
-    } catch (error) {
-        console.error('Database Error:', error);
-        throw new Error('Failed to fetch all customers.');
-    }
+    const results = await executeQuery<CustomersTable>('SELECT * FROM pos_customers');
+    //console.log(results);
+    return results;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch all customers.');
+  }
 
 }
 const ITEMS_PER_PAGE = 6;
 export async function fetchCustomersPages(query: string) {
-    noStore();
-    try {
-      const count:any = await executeQuery(`SELECT COUNT(*) as count
-      FROM companies
+  noStore();
+  try {
+    const count: any = await executeQuery(`SELECT COUNT(*) as count
+      FROM pos_customers
       WHERE
-        name LIKE '%${query}%' OR
+        first_name LIKE '%${query}%' OR
+        last_name LIKE '%${query}%' OR
+        store_name LIKE '%${query}%' OR
         email LIKE '%${query}%' OR
-        contact_no LIKE '%${query}%'
+        phone_no LIKE '%${query}%'
     `);
-  
-      const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
-      //console.log(totalPages);
-      return totalPages;
-    } catch (error) {
-      console.error('Database Error:', error);
-      throw new Error('Failed to fetch total number of customers.');
-    }
+
+    const totalPages = Math.ceil(Number(count[0].count) / ITEMS_PER_PAGE);
+    //console.log(totalPages);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of customers.');
   }
-  
-  export async function fetchFilteredCustomers(
-    query: string,
-    currentPage: number,
-  ) {
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
-  
-    try {
-      const companies = await executeQuery<CompaniesTable>(`
+}
+
+export async function fetchFilteredCustomers(
+  query: string,
+  currentPage: number,
+) {
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const customers = await executeQuery<CustomersTable>(`
         SELECT
           *
-        FROM companies
+        FROM pos_customers
         WHERE
-            name LIKE '%${query}%' OR
-            email LIKE '%${query}%' OR
-            contact_no LIKE '%${query}%'
-            ORDER BY expire DESC
+          first_name LIKE '%${query}%' OR
+          last_name LIKE '%${query}%' OR
+          store_name LIKE '%${query}%' OR
+          email LIKE '%${query}%' OR
+          phone_no LIKE '%${query}%'
+          ORDER BY first_name DESC
         LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
       `);
-      //console.log(invoices);
-      return companies;
-    } catch (error) {
-      console.error('Database Error:', error);
-      throw new Error('Failed to fetch companies.');
-    }
+    //console.log(invoices);
+    return customers;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch customers.');
   }
-  
+}

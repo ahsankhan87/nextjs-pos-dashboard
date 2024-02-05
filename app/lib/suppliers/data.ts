@@ -1,15 +1,15 @@
 'use server';
 import { executeQuery } from '../db';
 import {
-  Products
-} from '../../lib/products/definitions';
+  SuppliersTable
+} from '../suppliers/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
-// export async function fetchProducts() {
+// export async function fetchSuppliers() {
 //     noStore();
 //     try {
 //         type results = Array<any>;
-//         const [results] = await executeQuery.execute("select * from pos_Products");
+//         const [results] = await executeQuery.execute("select * from pos_Suppliers");
 //         //db.end();
 //         console.log(results);
 //         return results;
@@ -18,7 +18,7 @@ import { unstable_noStore as noStore } from 'next/cache';
 //         return error + ' Failed to fetch revenue data';
 //     }
 // }
-export async function fetchProducts() {
+export async function fetchSuppliers() {
   noStore();
   try {
     // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
@@ -26,21 +26,21 @@ export async function fetchProducts() {
     // await new Promise((resolve) => setTimeout(resolve, 3000));
     // console.log('Fetched data after 3 second...');
 
-    const results = await executeQuery<Products>('SELECT * FROM products');
+    const results = await executeQuery<SuppliersTable>('SELECT * FROM pos_supplier');
     //console.log(results);
     return results;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch all Products.');
+    throw new Error('Failed to fetch all Suppliers.');
   }
 
 }
 const ITEMS_PER_PAGE = 6;
-export async function fetchProductsPages(query: string) {
+export async function fetchSuppliersPages(query: string) {
   noStore();
   try {
     const count: any = await executeQuery(`SELECT COUNT(*) as count
-      FROM pos_items_detail
+      FROM pos_supplier
       WHERE
         name LIKE '%${query}%'
         
@@ -51,30 +51,30 @@ export async function fetchProductsPages(query: string) {
     return totalPages;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch total number of products.');
+    throw new Error('Failed to fetch total number of Suppliers.');
   }
 }
 
-export async function fetchFilteredProducts(
+export async function fetchFilteredSuppliers(
   query: string,
   currentPage: number,
 ) {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const products = await executeQuery<Products>(`
+    const Suppliers = await executeQuery<SuppliersTable>(`
         SELECT
           *
-        FROM pos_items_detail
+        FROM pos_supplier
         WHERE
             name LIKE '%${query}%'
             ORDER BY id DESC
         LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
       `);
     //console.log(invoices);
-    return products;
+    return Suppliers;
   } catch (error) {
     console.error('Database Error:', error);
-    throw new Error('Failed to fetch products.');
+    throw new Error('Failed to fetch Suppliers.');
   }
 }

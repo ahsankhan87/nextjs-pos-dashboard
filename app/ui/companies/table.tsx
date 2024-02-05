@@ -1,4 +1,4 @@
-import { CustomersTable } from '@/app/lib/customers/definitions';
+import { CustomersTable, CompaniesTable } from '@/app/lib/definitions';
 import { ActivateCompanyBtn, DeactivateCompanyBtn } from '@/app/ui/customers/buttons'
 import { fetchFilteredCustomers } from "@/app/lib/customers/data";
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
@@ -29,11 +29,11 @@ export default async function CustomersTable({
                     <div>
                       <div className="mb-2 flex items-center">
                         <div className="flex items-center gap-3">
-                          <p>{customer.first_name}</p>
+                          <p>{customer.name}</p>
                         </div>
                       </div>
                       <p className="text-sm text-gray-500">
-                        {customer.email}
+                        {new Date(customer.expire * 1000).toDateString()}
                       </p>
                     </div>
                   </div>
@@ -57,7 +57,7 @@ export default async function CustomersTable({
                     Status
                   </th>
                   <th scope="col" className="px-4 py-5 font-medium">
-                    Address
+                    Expiry Date
                   </th>
                   <th scope="col" className="relative py-3 pl-6 pr-3">
                     <span className="sr-only">Edit</span>
@@ -77,31 +77,31 @@ export default async function CustomersTable({
                             width={28}
                             height={28}
                           /> */}
-                        <p>{customer.first_name}</p>
+                        <p>{customer.name}</p>
                       </div>
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                       {customer.email}
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                      {customer.phone_no}
+                      {customer.contact_no}
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                       <span
                         className={clsx(
                           'inline-flex items-center rounded-full px-2 py-1 text-xs',
                           {
-                            'bg-green-500 text-white': customer.status === 'active',
-                            'bg-red-500 text-white': customer.status === 'inactive',
+                            'bg-green-500 text-white': !customer.locked,
+                            'bg-red-500 text-white': customer.locked,
                           },
                         )}
                       >
-                        {customer.status === 'inactive' ? (
+                        {customer.locked ? (
                           <>
                             In-active
                           </>
                         ) : null}
-                        {customer.status === 'active' ? (
+                        {!customer.locked ? (
                           <>
                             Active
                           </>
@@ -109,7 +109,7 @@ export default async function CustomersTable({
                       </span>
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
-                      {customer.address}
+                      {new Date(customer.expire * 1000).toDateString()}
 
                     </td>
                     <td className="whitespace-nowrap py-1 pr-3">
