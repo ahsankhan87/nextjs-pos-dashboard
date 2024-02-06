@@ -9,7 +9,7 @@ import { executeQuery } from '../db';
 const FormSchema = z.object({
     id: z.string(),
     name: z.string({
-        invalid_type_error: 'Please select a customer.',
+        invalid_type_error: 'Please Enter a product name.',
     }),
     cost_price: z.coerce
         .number()
