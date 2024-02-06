@@ -109,7 +109,4 @@ export type InvoiceForm = {
   status: 'pending' | 'paid';
 };
 
-export type ProductsField = {
-  item_id: number;
-  name: string;
-};
+

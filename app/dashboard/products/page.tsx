@@ -6,6 +6,7 @@ import Search from "@/app/ui/search";
 import Pagination from "@/app/ui/products/pagination";
 import ProductsTable from "@/app/ui/products/table";
 import { fetchProductsPages } from "@/app/lib/products/data";
+import { CreateProduct } from "@/app/ui/products/buttons";
 
 export const metadata: Metadata = {
   title: "Products",
@@ -29,7 +30,11 @@ export default async function Page({
       <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
         Products
       </h1>
-      <Search placeholder="Search Products..." />
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <Search placeholder="Search Products..." />
+        <CreateProduct />
+      </div>
+
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <ProductsTable query={query} currentPage={currentPage} />
       </Suspense>

@@ -1,7 +1,7 @@
 'use server';
 import { executeQuery } from '../db';
 import {
-  Products
+  ProductsTable
 } from '../../lib/products/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
@@ -26,7 +26,7 @@ export async function fetchProducts() {
     // await new Promise((resolve) => setTimeout(resolve, 3000));
     // console.log('Fetched data after 3 second...');
 
-    const results = await executeQuery<Products>('SELECT * FROM products');
+    const results = await executeQuery<ProductsTable>('SELECT * FROM products');
     //console.log(results);
     return results;
   } catch (error) {
@@ -62,7 +62,7 @@ export async function fetchFilteredProducts(
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const products = await executeQuery<Products>(`
+    const products = await executeQuery<ProductsTable>(`
         SELECT
           *
         FROM pos_items_detail

@@ -15,3 +15,10 @@ export type ProductsTable = {
   unit_price: number;
 
 };
+
+export type ProductsField = {
+  item_id: number;
+  name: string;
+  cost_price: number;
+  unit_price: number;
+};

@@ -1,6 +1,7 @@
-import { Products } from '@/app/lib/products/definitions';
+// import { Products } from '@/app/lib/products/definitions';
 import { ActivateCompanyBtn, DeactivateCompanyBtn } from '@/app/ui/products/buttons'
 import { fetchFilteredProducts } from "@/app/lib/products/data";
+import { formatCurrency } from '@/app/lib/utils';
 
 export default async function ProductsTable({
   query,
@@ -46,13 +47,13 @@ export default async function ProductsTable({
                     Name
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
-                    Email
+                    Cost Price
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
-                    Phone
+                    Unit Price
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
-                    Status
+
                   </th>
                   <th scope="col" className="px-4 py-5 font-medium">
                     Expiry Date
@@ -79,10 +80,11 @@ export default async function ProductsTable({
                       </div>
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                      {product.cost_price}
+                      {/* Convert into cent */}
+                      {formatCurrency(product.cost_price * 100)}
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                      {product.unit_price}
+                      {formatCurrency(product.unit_price * 100)}
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
 
