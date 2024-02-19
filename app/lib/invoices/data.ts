@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { executeQuery } from './db';
+import { executeQuery } from '../db';
 
 import {
   CustomerField,
@@ -10,8 +10,8 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
-} from './definitions';
-import { formatCurrency } from './utils';
+} from '../definitions';
+import { formatCurrency } from '../utils';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export async function fetchRevenue() {
@@ -106,15 +106,18 @@ export async function fetchFilteredInvoices(
         pos_invoices.sale_id,
         pos_invoices.total_amount,
         pos_invoices.sale_date,
+        pos_invoices.status,
         pos_customers.first_name,
-        pos_customers.email 
+        pos_customers.email
+        
       FROM pos_invoices
       LEFT JOIN pos_customers ON pos_invoices.customer_id = pos_customers.id
       WHERE
         pos_customers.first_name LIKE '%${query}%' OR
         pos_customers.email LIKE '%${query}%' OR
         pos_invoices.total_amount LIKE '%${query}%' OR
-        pos_invoices.sale_date LIKE '%${query}%' 
+        pos_invoices.sale_date LIKE '%${query}%' OR
+        pos_invoices.status LIKE '%${query}%' 
       ORDER BY pos_invoices.sale_date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `);

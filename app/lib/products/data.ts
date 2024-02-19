@@ -26,7 +26,7 @@ export async function fetchProducts() {
     // await new Promise((resolve) => setTimeout(resolve, 3000));
     // console.log('Fetched data after 3 second...');
 
-    const results = await executeQuery<ProductsTable>('SELECT * FROM products');
+    const results = await executeQuery<ProductsTable>('SELECT * FROM pos_items_detail');
     //console.log(results);
     return results;
   } catch (error) {
@@ -35,6 +35,25 @@ export async function fetchProducts() {
   }
 
 }
+
+export async function fetchProductById(id: string) {
+  noStore();
+  try {
+    // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
+    // console.log('Fetching customer data...');
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    // console.log('Fetched data after 3 second...');
+
+    const results = await executeQuery<ProductsTable>(`SELECT * FROM pos_items_detail WHERE id = ${id}`);
+    //console.log(results);
+    return results;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch product by id.');
+  }
+
+}
+
 const ITEMS_PER_PAGE = 6;
 export async function fetchProductsPages(query: string) {
   noStore();

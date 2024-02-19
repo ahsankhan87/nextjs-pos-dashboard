@@ -31,3 +31,42 @@ export const executeQuery = async <T>(query: string, values?: any[]): Promise<T[
         connection.release();
     }
 };
+
+// Example function to insert records from an array of objects
+export const insertRecords = async (records: any[]) => {
+    let connection;
+    try {
+        // Get a connection from the pool
+        connection = await pool.getConnection();
+
+        // Begin a transaction
+        await connection.beginTransaction();
+
+        // Loop through each record in the array
+        for (const record of records) {
+            // Construct the INSERT SQL statement dynamically based on the record's properties
+            const sql = `INSERT INTO your_table (column1, column2, column3) VALUES (?, ?, ?)`;
+            const values = [record.column1, record.column2, record.column3]; // Adjust as per your object's properties
+
+            // Execute the INSERT SQL statement
+            await connection.query(sql, values);
+        }
+
+        // Commit the transaction
+        await connection.commit();
+
+        console.log('All records inserted successfully');
+    } catch (error) {
+        // If any error occurs, rollback the transaction
+        if (connection) {
+            await connection.rollback();
+        }
+        console.error('Error inserting records:', error);
+    } finally {
+        // Release the connection back to the pool
+        if (connection) {
+            connection.release();
+        }
+    }
+}
+

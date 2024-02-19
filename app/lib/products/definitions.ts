@@ -10,6 +10,7 @@ export type ProductsTable = {
   id: number;
   name: string;
   barcode: string;
+  quantity: number;
   cost_price: number;
   avg_cost: number;
   unit_price: number;

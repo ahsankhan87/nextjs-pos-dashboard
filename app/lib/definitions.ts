@@ -104,9 +104,12 @@ export type CustomerField = {
 
 export type InvoiceForm = {
   sale_id: string;
-  customer_id: string;
+  customerId: string;
+  amount: number;
   total_amount: number;
   status: 'pending' | 'paid';
+  sale_date: string;
+  due_date: string;
 };
 
 
