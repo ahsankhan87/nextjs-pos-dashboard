@@ -19,7 +19,7 @@ export default async function RevenueChart() { // Make component async, remove t
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   if (!revenue || revenue.length === 0) {
-    return <p className="mt-4 text-gray-400">No data available.</p>;
+    return <div className="w-full md:col-span-4"><p className="mt-4 text-gray-400">No data available.</p></div>;
   }
 
   return (

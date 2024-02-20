@@ -62,12 +62,11 @@ export async function fetchCardData() {
     // However, we are intentionally splitting them to demonstrate
     // how to initialize multiple queries in parallel with JS.
     const invoiceCountPromise = executeQuery(`SELECT COUNT(*) as count FROM pos_invoices`);
-    const customerCountPromise = executeQuery(`SELECT COUNT(*) as count FROM companies`);
-    const invoiceStatusPromise = 0;
-    // executeQuery(`SELECT
-    //      SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END) AS "paid",
-    //      SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
-    //      FROM invoices`);
+    const customerCountPromise = executeQuery(`SELECT COUNT(*) as count FROM pos_customers`);
+    const invoiceStatusPromise = executeQuery(`SELECT
+         SUM(CASE WHEN status = 'paid' THEN total_amount ELSE 0 END) AS "paid",
+         SUM(CASE WHEN status = 'pending' THEN total_amount ELSE 0 END) AS "pending"
+         FROM pos_invoices`);
 
     const data: any = await Promise.all([
       invoiceCountPromise,
@@ -77,9 +76,8 @@ export async function fetchCardData() {
 
     const numberOfInvoices = Number(data[0][0].count ?? '0');
     const numberOfCustomers = Number(data[1][0].count ?? '0');
-    const totalPaidInvoices = formatCurrency(data[2].paid ?? '0');
-    const totalPendingInvoices = formatCurrency(data[2].pending ?? '0');
-
+    const totalPaidInvoices = formatCurrency(data[2][0].paid ?? '0');
+    const totalPendingInvoices = formatCurrency(data[2][0].pending ?? '0');
 
     return {
       numberOfCustomers,

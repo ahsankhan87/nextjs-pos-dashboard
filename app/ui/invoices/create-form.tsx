@@ -56,28 +56,48 @@ export default function Form({ customers, products }: { customers: CustomerField
   };
   // Function to handle changing quantity
   const handleProductChange = async (index: number, productId: string) => {
-    const resultProduct = await fetchProductById(productId);
+    if (productId) {
+      const resultProduct = await fetchProductById(productId);
 
-    const updatedRows = [...rows];
-    updatedRows[index].productId = productId;
-    updatedRows[index].unitPrice = resultProduct[0].unit_price;
-    updatedRows[index].costPrice = resultProduct[0].avg_cost;
+      const updatedRows = [...rows];
+      updatedRows[index].productId = productId;
+      updatedRows[index].unitPrice = resultProduct[0].unit_price;
+      updatedRows[index].costPrice = resultProduct[0].avg_cost;
 
-    setRows(updatedRows);
+      setRows(updatedRows);
+    } else {
+      const updatedRows = [...rows];
+      updatedRows[index].productId = '';
+      updatedRows[index].unitPrice = 0;
+      updatedRows[index].costPrice = 0;
+
+      setRows(updatedRows);
+    }
   };
 
+  const total_amount = (rows.map((product) => {
+    return product.unitPrice * product.quantity
+  }).reduce((a, b) => a + b, 0));
+
   const handleSubmit = async (formData: FormData) => {
+
     try {
-      const formData_1: InvoiceForm | unknown = {
-        customerId: formData.get('customerId'),
-        amount: formData.get('amount'),
-        status: formData.get('status'),
-        sale_date: formData.get('sale_date'),
-        due_date: formData.get('due_date'),
-        details: rows,
-      };
-      // // Call server action to create invoice
-      await dispatch(formData_1);
+      if (rows.length > 0 && rows[0].productId) {
+        const formData_1: InvoiceForm | unknown = {
+          customerId: formData.get('customerId'),
+          //amount: formData.get('amount'),
+          status: formData.get('status'),
+          sale_date: formData.get('sale_date'),
+          due_date: formData.get('due_date'),
+          total_amount: formData.get('total_amount'),
+          details: rows,
+        };
+        // // Call server action to create invoice
+        await dispatch(formData_1);
+
+      } else {
+        alert('Please select products');
+      }
       // Redirect to another page or display a success message
 
     } catch (error) {
@@ -158,26 +178,6 @@ export default function Form({ customers, products }: { customers: CustomerField
 
               />
               <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-            </div>
-          </div>
-        </div>
-        {/* Invoice Amount */}
-        <div className="mb-4">
-          <label htmlFor="amount" className="mb-2 block text-sm font-medium">
-            Choose an amount
-          </label>
-          <div className="relative mt-2 rounded-md">
-            <div className="relative">
-              <input
-                id="amount"
-                name="amount"
-                type="number"
-                step="0.01"
-                placeholder="Enter USD amount"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                required
-              />
-              <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
         </div>
@@ -291,9 +291,14 @@ export default function Form({ customers, products }: { customers: CustomerField
                     <TrashIcon onClick={() => handleDeleteRow(index)} className="text-red-500  h-[18px] w-[18px]" />
                   </td>
                 </tr>
+
               ))
             }
-
+            <tr>
+              <th colSpan={4} className='text-right'>Total</th>
+              <th>{total_amount}</th>
+              <th><input type="hidden" name='total_amount' value={total_amount} /></th>
+            </tr>
           </tbody>
         </table>
         <Button type='button' className='bg-purple-500 px-4 text-sm' onClick={() => handleAddRow()}>Add New</Button>

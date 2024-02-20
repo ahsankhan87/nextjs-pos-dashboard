@@ -36,7 +36,7 @@ export async function fetchProducts() {
 
 }
 
-export async function fetchProductById(id: string) {
+export async function fetchProductById(id: string = "0") {
   noStore();
   try {
     // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
@@ -45,7 +45,7 @@ export async function fetchProductById(id: string) {
     // console.log('Fetched data after 3 second...');
 
     const results = await executeQuery<ProductsTable>(`SELECT * FROM pos_items_detail WHERE id = ${id}`);
-    //console.log(results);
+    console.log(id);
     return results;
   } catch (error) {
     console.error('Database Error:', error);
