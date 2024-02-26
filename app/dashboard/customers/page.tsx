@@ -6,6 +6,7 @@ import CustomersTable from "@/app/ui/customers/table";
 import { InvoicesTableSkeleton } from "@/app/ui/skeletons";
 import Search from "@/app/ui/search";
 import Pagination from "@/app/ui/customers/pagination";
+import { CreateCustomer } from "@/app/ui/customers/buttons";
 
 export const metadata: Metadata = {
   title: "Customers",
@@ -29,7 +30,12 @@ export default async function Page({
       <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
         Customers
       </h1>
-      <Search placeholder="Search customers..." />
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <Search placeholder="Search customers..." />
+
+        <CreateCustomer />
+      </div>
+
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <CustomersTable query={query} currentPage={currentPage} />
       </Suspense>
