@@ -98,8 +98,10 @@ export type CompaniesTable = {
 
 };
 export type CustomerField = {
-  id: string;
+  customerId: string;
   first_name: string;
+  email: string;
+
 };
 
 export type InvoiceForm = {

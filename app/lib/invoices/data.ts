@@ -180,8 +180,9 @@ export async function fetchCustomers() {
   try {
     const data = await executeQuery<CustomerField>(`
       SELECT
-        id,
-        first_name
+        id as customerId,
+        first_name,
+        email
       FROM pos_customers
       ORDER BY first_name ASC
     `);
