@@ -2,7 +2,7 @@
 
 import React, { useState, FormEvent } from 'react';
 import { CustomerField } from '../../lib/definitions';
-import { createCustomerModal } from '@/app/lib/customers/actions';
+import { createCustomerModal, getLastInsertID } from '@/app/lib/customers/actions';
 import { useFormState } from 'react-dom';
 
 interface PopupProps {
@@ -24,22 +24,19 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
   const [address, setAddress] = useState('');
 
   const handleCustomerSubmit = async (formData: FormData) => {
-    //e.preventDefault();
+    // e.preventDefault();
 
     setIsLoading(true)
     setError(null) // Clear previous errors when a new request starts
     try {
-      //const formData = new FormData(e.currentTarget)
+      // const formData = new FormData(e.currentTarget)
 
-      console.log(formData.get('first_name'));
-      const lastInsertId = await dispatch(formData);
-      console.log('lastInsertId ' + lastInsertId);
+      await dispatch(formData);
+      const lastInsertID = await getLastInsertID();//last Insert ID of customer insert
 
-      setCustomerId(lastInsertId);
-
-      // addCustomer({
-      //   customerId, first_name, email
-      // });
+      addCustomer({
+        customerId: lastInsertID, first_name, email
+      });
       // Reset form fields
       setCustomerId('');
       setFirst_name('');
@@ -57,10 +54,10 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
 
   return (
     <>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
       <div
         className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none transition-colors"
       >
+        {error && <div style={{ color: 'red' }}>{error}</div>}
         <div className="relative w-auto my-6 mx-auto max-w-3xl">
           {/*content*/}
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none shadow transition-all scale-100 opacity-100">
@@ -74,7 +71,6 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
               </div>
               {/*body*/}
               <div className="relative p-6 flex-auto">
-
                 <input
                   type="text"
                   placeholder="Name"
@@ -82,16 +78,17 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
                   name="first_name"
                   onChange={(e) => setFirst_name(e.target.value)}
                   className="block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 mb-4"
-
+                  required
+                  autoFocus
                 />
-                <div id="customer-error" aria-live="polite" aria-atomic="true">
+                {/* <div id="customer-error" aria-live="polite" aria-atomic="true">
                   {state.errors?.first_name &&
                     state.errors.first_name.map((error: string) => (
                       <p className="mt-2 text-sm text-red-500" key={error}>
                         {error}
                       </p>
                     ))}
-                </div>
+                </div> */}
 
                 <input
                   type="text"

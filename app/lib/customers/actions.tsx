@@ -72,9 +72,34 @@ export async function createCustomer(prevState: State, formData: FormData) {
     redirect('/dashboard/customers');
 }
 
-const CreateCustomerModal = FormSchema.omit({ id: true, date: true });
+const FormSchemaModal = z.object({
+    id: z.string(),
+    first_name: z.string({
+        invalid_type_error: 'Please Enter a customer name.',
+    }),
+    email: z.string({
+        invalid_type_error: 'Please Enter a customer email.',
+    }),
+    phone_no: z.string({
+        invalid_type_error: 'Please Enter a customer phone no.',
+    }),
+    address: z.string({
+        invalid_type_error: 'Please Enter a customer address.',
+    }),
+});
+export type StateModal = {
+    errors?: {
+        first_name?: string[];
+        email?: string[];
+        phone_no?: string[];
+        address?: string[];
+    };
+    message?: string | null;
+};
 
-export async function createCustomerModal(prevState: State, formData: FormData) {
+const CreateCustomerModal = FormSchemaModal.omit({ id: true, date: true });
+
+export async function createCustomerModal(prevState: StateModal, formData: FormData) {
     // Validate form using Zod
     console.log(formData);
     const validatedFields = CreateCustomerModal.safeParse({
@@ -103,16 +128,8 @@ export async function createCustomerModal(prevState: State, formData: FormData) 
             VALUES ('${first_name}', '${email}', '${phone_no}','${address}', 'active', '21')
           `);
 
-        const lastInsertId: any = await executeQuery(`
-          SELECT LAST_INSERT_ID()
-        `);
-
-        console.log('db insert id ' + lastInsertId[0]['LAST_INSERT_ID()']);
-
         revalidatePath('/dashboard/customers');
-        revalidatePath('/dashboard/invoice/create');
-        
-        return lastInsertId[0]['LAST_INSERT_ID()'];
+        revalidatePath('/dashboard/invoices/create');
 
     } catch (error) {
         return {
@@ -121,6 +138,21 @@ export async function createCustomerModal(prevState: State, formData: FormData) 
     }
 
     //redirect('/dashboard/customers');
+}
+
+export async function getLastInsertID() {
+    try {
+        const lastInsertId: any = await executeQuery(`
+            SELECT LAST_INSERT_ID()
+        `);
+
+        return lastInsertId[0]['LAST_INSERT_ID()']
+
+    } catch (error) {
+        return {
+            message: 'Database Error: Failed to get LAST_INSERT_ID.',
+        };
+    }
 }
 
 export async function activateCompany(

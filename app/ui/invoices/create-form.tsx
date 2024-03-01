@@ -157,7 +157,7 @@ export default function Form({ customers, products }: { customers: CustomerField
                 <option value="NEW-CUSTOMER">Add New Customer</option>
                 {allCustomers.map((customer) => (
                   <option key={customer.customerId} value={customer.customerId}>
-                    {customer.first_name} {customer.customerId}
+                    {customer.first_name}
                   </option>
                 ))}
               </select>
