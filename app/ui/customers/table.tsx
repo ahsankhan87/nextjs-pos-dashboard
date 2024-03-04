@@ -1,5 +1,5 @@
 import { CustomersTable } from '@/app/lib/customers/definitions';
-import { ActivateCompanyBtn, DeactivateCompanyBtn } from '@/app/ui/customers/buttons'
+import { UpdateCustomer, DeleteCustomer } from '@/app/ui/customers/buttons'
 import { fetchFilteredCustomers } from "@/app/lib/customers/data";
 import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
@@ -113,9 +113,10 @@ export default async function CustomersTable({
 
                     </td>
                     <td className="whitespace-nowrap py-1 pr-3">
-                      <div className="flex justify-end gap-2">
-                        <ActivateCompanyBtn id={customer.id} />
-                        <DeactivateCompanyBtn id={customer.id} />
+
+                      <div className="flex justify-end gap-3">
+                        <UpdateCustomer id={customer.id} />
+                        <DeleteCustomer id={customer.id} />
                       </div>
                     </td>
                   </tr>

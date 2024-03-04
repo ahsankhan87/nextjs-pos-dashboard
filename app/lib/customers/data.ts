@@ -85,3 +85,26 @@ export async function fetchFilteredCustomers(
     throw new Error('Failed to fetch customers.');
   }
 }
+
+export async function fetchCustomerById(id: string) {
+  noStore();
+  try {
+    const data = await executeQuery<CustomersTable>(`
+      SELECT
+        *
+      FROM pos_customers
+      WHERE id = ${id};
+    `);
+
+    const customer = data.map((customer) => ({
+      ...customer,
+      // Convert amount from cents to dollars
+
+    }));
+    // Customer is an empty array []
+    return customer[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+  }
+}
+

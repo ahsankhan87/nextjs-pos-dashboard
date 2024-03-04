@@ -64,7 +64,7 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
             <form action={handleCustomerSubmit}>
               {/*header*/}
               <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                <h3 className="text-3xl font-semibold">
+                <h3 className="text-xl font-semibold">
                   Add New Customer
                 </h3>
 

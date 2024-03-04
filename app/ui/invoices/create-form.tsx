@@ -6,8 +6,9 @@ import {
   ClockIcon,
   CurrencyDollarIcon,
   UserCircleIcon,
-  TrashIcon, CalendarIcon
+  TrashIcon, CalendarIcon,
 } from '@heroicons/react/24/outline';
+import { PlusCircleIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/app/ui/button';
 import { createInvoice } from '@/app/lib/invoices/actions';
 import { fetchProductById } from '@/app/lib/products/data';
@@ -30,7 +31,7 @@ export default function Form({ customers, products }: { customers: CustomerField
     // Simulated function to add customer
     // Replace with actual API call to add customer
     //console.log(JSON.stringify(newCustomer));
-    console.log(newCustomer);
+    
     try {
       const data = newCustomer;
       setAllCustomers([...allCustomers, data]);
@@ -154,7 +155,7 @@ export default function Form({ customers, products }: { customers: CustomerField
                 <option value="" disabled>
                   Select a customer
                 </option>
-                <option value="NEW-CUSTOMER">Add New Customer</option>
+                <option value="NEW-CUSTOMER" className='text-blue-500'>Add New Customer</option>
                 {allCustomers.map((customer) => (
                   <option key={customer.customerId} value={customer.customerId}>
                     {customer.first_name}
@@ -166,11 +167,11 @@ export default function Form({ customers, products }: { customers: CustomerField
             <button
               type='button'
               onClick={() => setShowCustomerCreateModal(true)}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              className="flex bg-blue-500 text-white px-2 py-2 rounded-md hover:bg-blue-600"
             >
+              <PlusCircleIcon className='h-[18px] w-[18px] mt-1' />
               Add New Customer
             </button>
-
 
             <div id="customer-error" aria-live="polite" aria-atomic="true">
               {state.errors?.customerId &&

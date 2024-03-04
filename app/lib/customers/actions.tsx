@@ -155,26 +155,50 @@ export async function getLastInsertID() {
     }
 }
 
-export async function activateCompany(
-    companyid: string,
-) {
-    try {
-        await executeQuery(`UPDATE companies SET locked = '1' WHERE id = '${companyid}'`);
-        revalidatePath('/dashboard/customers');
+const UpdateCustomer = FormSchema.omit({ id: true, date: true });
 
-    } catch (error) {
-        return { message: 'Database Error: Failed to activate.' };
+export async function updateCustomer(
+    id: string,
+    prevState: State,
+    formData: FormData,
+) {
+    const validatedFields = UpdateCustomer.safeParse({
+        first_name: formData.get('first_name'),
+        email: formData.get('email'),
+        phone_no: formData.get('phone_no'),
+        address: formData.get('address'),
+    });
+    console.log(id);
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Update Customer.',
+        };
     }
+
+    const { first_name, email, phone_no, address } = validatedFields.data;
+
+    try {
+        await executeQuery(`
+        UPDATE pos_customers
+        SET first_name = '${first_name}', email = '${email}', phone_no = '${phone_no}', address = '${address}'
+        WHERE id = '${id}'
+      `);
+    } catch (error) {
+        return { message: 'Database Error: Failed to Update Customer.' };
+    }
+
+    revalidatePath('/dashboard/customers');
+    redirect('/dashboard/customers');
 }
 
-export async function deactivateCompany(
-    companyid: string,
-) {
+export async function deleteCustomer(id: string) {
+    // throw new Error('Failed to Delete Customer');
     try {
-        await executeQuery(`UPDATE companies SET locked = '0' WHERE id = '${companyid}'`);
+        await executeQuery(`DELETE FROM pos_customers WHERE id = '${id}'`);
         revalidatePath('/dashboard/customers');
-
+        return { message: 'Customer Deleted.' };
     } catch (error) {
-        return { message: 'Database Error: Failed to activate.' };
+        return { message: 'Database Error: Failed to Delete Customer.' };
     }
 }
