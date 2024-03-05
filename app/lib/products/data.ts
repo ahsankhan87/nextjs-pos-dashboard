@@ -22,7 +22,7 @@ export async function fetchProducts() {
   noStore();
   try {
     // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
-    // console.log('Fetching customer data...');
+    // console.log('Fetching product data...');
     // await new Promise((resolve) => setTimeout(resolve, 3000));
     // console.log('Fetched data after 3 second...');
 
@@ -40,13 +40,21 @@ export async function fetchProductById(id: string = "0") {
   noStore();
   try {
     // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
-    // console.log('Fetching customer data...');
+    // console.log('Fetching product data...');
     // await new Promise((resolve) => setTimeout(resolve, 3000));
     // console.log('Fetched data after 3 second...');
 
     const results = await executeQuery<ProductsTable>(`SELECT * FROM pos_items_detail WHERE id = ${id}`);
-    console.log(id);
-    return results;
+    //console.log(id);
+    // return results;
+
+    const product = results.map((product) => ({
+      ...product,
+      // Convert amount from cents to dollars
+
+    }));
+    // product is an empty array []
+    return product[0];
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch product by id.');

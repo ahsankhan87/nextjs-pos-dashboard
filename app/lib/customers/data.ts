@@ -95,6 +95,7 @@ export async function fetchCustomerById(id: string) {
       FROM pos_customers
       WHERE id = ${id};
     `);
+    //return data;
 
     const customer = data.map((customer) => ({
       ...customer,

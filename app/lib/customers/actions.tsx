@@ -35,7 +35,7 @@ const CreateCustomer = FormSchema.omit({ id: true, date: true });
 
 export async function createCustomer(prevState: State, formData: FormData) {
     // Validate form using Zod
-    console.log(formData);
+    
     const validatedFields = CreateCustomer.safeParse({
         first_name: formData.get('first_name'),
         email: formData.get('email'),
@@ -101,7 +101,7 @@ const CreateCustomerModal = FormSchemaModal.omit({ id: true, date: true });
 
 export async function createCustomerModal(prevState: StateModal, formData: FormData) {
     // Validate form using Zod
-    console.log(formData);
+   
     const validatedFields = CreateCustomerModal.safeParse({
         first_name: formData.get('first_name'),
         email: formData.get('email'),
@@ -168,7 +168,7 @@ export async function updateCustomer(
         phone_no: formData.get('phone_no'),
         address: formData.get('address'),
     });
-    console.log(id);
+    
     if (!validatedFields.success) {
         return {
             errors: validatedFields.error.flatten().fieldErrors,

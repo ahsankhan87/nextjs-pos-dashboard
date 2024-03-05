@@ -1,7 +1,6 @@
 import { CustomersTable } from '@/app/lib/customers/definitions';
 import { UpdateCustomer, DeleteCustomer } from '@/app/ui/customers/buttons'
 import { fetchFilteredCustomers } from "@/app/lib/customers/data";
-import { CheckIcon, ClockIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 
 export default async function CustomersTable({
@@ -65,7 +64,7 @@ export default async function CustomersTable({
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200 text-gray-900">
+              <tbody className="bg-white">
                 {customers.map((customer) => (
                   <tr key={customer.id} className="group">
                     <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
@@ -110,10 +109,8 @@ export default async function CustomersTable({
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
                       {customer.address}
-
                     </td>
-                    <td className="whitespace-nowrap py-1 pr-3">
-
+                    <td className="whitespace-nowrap py-3 pl-6 pr-3">
                       <div className="flex justify-end gap-3">
                         <UpdateCustomer id={customer.id} />
                         <DeleteCustomer id={customer.id} />

@@ -57,7 +57,7 @@ export async function createProduct(prevState: State, formData: FormData) {
 
         await executeQuery(`
             INSERT INTO pos_items_detail (name, cost_price, unit_price)
-            VALUES ('${name}', '${costPriceInCents}', '${unitPriceInCents}')
+            VALUES ('${name}', '${cost_price}', '${unit_price}')
           `);
 
     } catch (error) {
@@ -70,26 +70,49 @@ export async function createProduct(prevState: State, formData: FormData) {
     redirect('/dashboard/products');
 }
 
-export async function activateCompany(
-    companyid: string,
-) {
-    try {
-        await executeQuery(`UPDATE companies SET locked = '1' WHERE id = '${companyid}'`);
-        revalidatePath('/dashboard/customers');
+const UpdateProduct = FormSchema.omit({ id: true, date: true });
 
-    } catch (error) {
-        return { message: 'Database Error: Failed to activate.' };
+export async function updateProduct(
+    id: string,
+    prevState: State,
+    formData: FormData,
+) {
+    const validatedFields = UpdateProduct.safeParse({
+        name: formData.get('name'),
+        cost_price: formData.get('cost_price'),
+        unit_price: formData.get('unit_price'),
+    });
+
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
+            message: 'Missing Fields. Failed to Update Product.',
+        };
     }
+
+    const { name, cost_price, unit_price } = validatedFields.data;
+
+    try {
+        await executeQuery(`
+        UPDATE pos_items_detail
+        SET name = '${name}', cost_price = '${cost_price}', unit_price = '${unit_price}'
+        WHERE id = '${id}'
+      `);
+    } catch (error) {
+        return { message: 'Database Error: Failed to Update Product.' };
+    }
+
+    revalidatePath('/dashboard/products');
+    redirect('/dashboard/products');
 }
 
-export async function deactivateCompany(
-    companyid: string,
-) {
+export async function deleteProduct(id: string) {
+    // throw new Error('Failed to Delete Product');
     try {
-        await executeQuery(`UPDATE companies SET locked = '0' WHERE id = '${companyid}'`);
-        revalidatePath('/dashboard/customers');
-
+        await executeQuery(`DELETE FROM pos_items_detail WHERE id = '${id}'`);
+        revalidatePath('/dashboard/products');
+        return { message: 'Product Deleted.' };
     } catch (error) {
-        return { message: 'Database Error: Failed to activate.' };
+        return { message: 'Database Error: Failed to Delete Product.' };
     }
 }

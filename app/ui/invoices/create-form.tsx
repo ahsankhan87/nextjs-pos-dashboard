@@ -78,8 +78,8 @@ export default function Form({ customers, products }: { customers: CustomerField
 
       const updatedRows = [...rows];
       updatedRows[index].productId = productId;
-      updatedRows[index].unitPrice = resultProduct[0].unit_price;
-      updatedRows[index].costPrice = resultProduct[0].avg_cost;
+      updatedRows[index].unitPrice = resultProduct.unit_price;
+      updatedRows[index].costPrice = resultProduct.avg_cost;
 
       setRows(updatedRows);
     } else {

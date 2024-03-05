@@ -1,5 +1,5 @@
 // import { Products } from '@/app/lib/products/definitions';
-import { ActivateCompanyBtn, DeactivateCompanyBtn } from '@/app/ui/products/buttons'
+import { UpdateProduct, DeleteProduct } from '@/app/ui/products/buttons'
 import { fetchFilteredProducts } from "@/app/lib/products/data";
 import { formatCurrency } from '@/app/lib/utils';
 
@@ -64,7 +64,7 @@ export default async function ProductsTable({
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200 text-gray-900">
+              <tbody className="bg-white">
                 {Products.map((product) => (
                   <tr key={product.id} className="group">
                     <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
@@ -81,10 +81,10 @@ export default async function ProductsTable({
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                       {/* Convert into cent */}
-                      {formatCurrency(product.cost_price * 100)}
+                      {formatCurrency(product.cost_price)}
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
-                      {formatCurrency(product.unit_price * 100)}
+                      {formatCurrency(product.unit_price)}
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
 
@@ -94,7 +94,8 @@ export default async function ProductsTable({
                     </td>
                     <td className="whitespace-nowrap py-1 pr-3">
                       <div className="flex justify-end gap-2">
-
+                        <UpdateProduct id={product.id} />
+                        <DeleteProduct id={product.id} />
                       </div>
                     </td>
                   </tr>
