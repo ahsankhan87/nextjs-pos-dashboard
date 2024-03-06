@@ -26,7 +26,7 @@ export async function fetchSuppliers() {
     // await new Promise((resolve) => setTimeout(resolve, 3000));
     // console.log('Fetched data after 3 second...');
 
-    const results = await executeQuery<SuppliersTable>('SELECT * FROM pos_supplier');
+    const results = await executeQuery<SuppliersTable>('SELECT * FROM pos_suppliers');
     //console.log(results);
     return results;
   } catch (error) {
@@ -35,12 +35,39 @@ export async function fetchSuppliers() {
   }
 
 }
+
+export async function fetchSupplierById(id: string = "0") {
+  noStore();
+  try {
+    // const result = await executeQuery<{ propertyName: string }[]>('SELECT * FROM your_table');
+    // console.log('Fetching product data...');
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    // console.log('Fetched data after 3 second...');
+
+    const results = await executeQuery<SuppliersTable>(`SELECT name,email,contact_no,address,status FROM pos_suppliers WHERE id = ${id}`);
+    //console.log(id);
+    // return results;
+
+    const supplier = results.map((supplier) => ({
+      ...supplier,
+      // Convert amount from cents to dollars
+
+    }));
+    // product is an empty array []
+    return supplier[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch supplier by id.');
+  }
+
+}
+
 const ITEMS_PER_PAGE = 6;
 export async function fetchSuppliersPages(query: string) {
   noStore();
   try {
     const count: any = await executeQuery(`SELECT COUNT(*) as count
-      FROM pos_supplier
+      FROM pos_suppliers
       WHERE
         name LIKE '%${query}%'
         
@@ -65,7 +92,7 @@ export async function fetchFilteredSuppliers(
     const Suppliers = await executeQuery<SuppliersTable>(`
         SELECT
           *
-        FROM pos_supplier
+        FROM pos_suppliers
         WHERE
             name LIKE '%${query}%'
             ORDER BY id DESC

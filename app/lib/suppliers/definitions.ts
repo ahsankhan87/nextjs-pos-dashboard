@@ -7,7 +7,7 @@ import { DateTime } from "next-auth/providers/kakao";
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 
 export type SuppliersTable = {
-  id: number;
+  id: string;
   name: string;
   email: string;
   address: string;

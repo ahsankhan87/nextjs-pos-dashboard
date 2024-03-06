@@ -6,6 +6,7 @@ import Search from "@/app/ui/search";
 import Pagination from "@/app/ui/suppliers/pagination";
 import SuppliersTable from "@/app/ui/suppliers/table";
 import { fetchSuppliersPages } from "@/app/lib/suppliers/data";
+import { CreateSupplier } from "@/app/ui/suppliers/buttons";
 
 export const metadata: Metadata = {
   title: "Suppliers",
@@ -29,7 +30,11 @@ export default async function Page({
       <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
         Suppliers
       </h1>
-      <Search placeholder="Search Suppliers..." />
+      <div className="mt-4 flex items-center justify-between gap-2 md:mt-8">
+        <Search placeholder="Search Suppliers..." />
+        <CreateSupplier />
+      </div>
+
       <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <SuppliersTable query={query} currentPage={currentPage} />
       </Suspense>

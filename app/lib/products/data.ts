@@ -62,7 +62,7 @@ export async function fetchProductById(id: string = "0") {
 
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 10;
 export async function fetchProductsPages(query: string) {
   noStore();
   try {
@@ -104,4 +104,18 @@ export async function fetchFilteredProducts(
     console.error('Database Error:', error);
     throw new Error('Failed to fetch products.');
   }
+}
+
+export async function fetchTotalStock(id: string) {
+  noStore();
+  try {
+
+    const results: any = await executeQuery(`SELECT SUM(quantity) as total_stock FROM pos_items_detail WHERE id =${id}`);
+
+    return Number(results[0].total_stock);
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total quantity.');
+  }
+
 }

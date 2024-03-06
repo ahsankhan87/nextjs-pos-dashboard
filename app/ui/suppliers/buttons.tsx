@@ -1,29 +1,38 @@
-// import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-// import Link from 'next/link';
-import { activateCompany, deactivateCompany } from '@/app/lib/products/actions';
+import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { deleteSupplier } from '@/app/lib/suppliers/actions';
 
-export function ActivateCompanyBtn({ id }: { id: string }) {
-    const activateCompanyWithId = activateCompany.bind(null, id);
+export function CreateSupplier() {
     return (
-        <>
-            <form action={activateCompanyWithId}>
-                <button className="rounded-md border p-2 hover:bg-gray-100">
-                    <span className="sr-only">Activate</span>
-                    Activate
-                </button>
-            </form>
-        </>
+        <Link
+            href="/dashboard/suppliers/create"
+            className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        >
+            <span className="hidden md:block">Create Supplier</span>{' '}
+            <PlusIcon className="h-5 md:ml-4" />
+        </Link>
     );
 }
 
-export function DeactivateCompanyBtn({ id }: { id: string }) {
-    const deactivateCompanyWithId = deactivateCompany.bind(null, id);
+export function UpdateSupplier({ id }: { id: string }) {
+    return (
+        <Link
+            href={`/dashboard/suppliers/${id}/edit`}
+            className="rounded-md border p-2 hover:bg-gray-100"
+        >
+            <PencilIcon className="w-5" />
+        </Link>
+    );
+}
+
+export function DeleteSupplier({ id }: { id: string }) {
+    const deleteSupplierWithId = deleteSupplier.bind(null, id);
     return (
         <>
-            <form action={deactivateCompanyWithId}>
+            <form action={deleteSupplierWithId}>
                 <button className="rounded-md border p-2 hover:bg-gray-100">
-                    <span className="sr-only">De-activate</span>
-                    De-activate
+                    <span className="sr-only">Delete</span>
+                    <TrashIcon className="w-4" />
                 </button>
             </form>
         </>

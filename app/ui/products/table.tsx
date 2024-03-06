@@ -32,7 +32,7 @@ export default async function ProductsTable({
                         </div>
                       </div>
                       <p className="text-sm text-gray-500">
-
+                        {product.quantity}
                       </p>
                     </div>
                   </div>
@@ -47,13 +47,13 @@ export default async function ProductsTable({
                     Name
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
+                    Quantity
+                  </th>
+                  <th scope="col" className="px-3 py-5 font-medium">
                     Cost Price
                   </th>
                   <th scope="col" className="px-3 py-5 font-medium">
                     Unit Price
-                  </th>
-                  <th scope="col" className="px-3 py-5 font-medium">
-
                   </th>
                   <th scope="col" className="px-4 py-5 font-medium">
                     Expiry Date
@@ -80,15 +80,16 @@ export default async function ProductsTable({
                       </div>
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
+                      {product.quantity}
+                    </td>
+                    <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                       {/* Convert into cent */}
                       {formatCurrency(product.cost_price)}
                     </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                       {formatCurrency(product.unit_price)}
                     </td>
-                    <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
 
-                    </td>
                     <td className="whitespace-nowrap bg-white px-4 py-5 text-sm group-first-of-type:rounded-md group-last-of-type:rounded-md">
 
                     </td>

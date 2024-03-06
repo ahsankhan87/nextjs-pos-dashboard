@@ -7,6 +7,7 @@ import { redirect } from 'next/navigation';
 import { signIn } from '../../../auth';
 import { executeQuery } from '../db';
 import { InvoiceForm } from '../definitions';
+import { fetchTotalStock } from '../products/data';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -75,7 +76,16 @@ export async function createInvoice(prevState: State, formData: InvoiceForm | an
           VALUES ('${entry.id}','${entry.id}','${entry.productId}', 
           '${entry.quantity}',1,'${entry.unitPrice}','21')
         `);
+
+      const total_quantity: number = await fetchTotalStock(entry.productId);
+      console.log(total_quantity);
+
+      await executeQuery(`UPDATE pos_items_detail
+          SET quantity = '${(total_quantity - entry.quantity)}'
+          WHERE id = '${entry.productId}'
+        `);
     }
+
 
   } catch (error) {
     return {

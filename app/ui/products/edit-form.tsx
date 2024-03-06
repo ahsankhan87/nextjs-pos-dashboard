@@ -1,11 +1,8 @@
 'use client';
 
-import { ProductsTable } from '@/app/lib/definitions';
+import { ProductsTable } from '@/app/lib/products/definitions';
 import {
-    CheckIcon,
-    ClockIcon,
-    CurrencyDollarIcon,
-    UserCircleIcon,
+    CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';

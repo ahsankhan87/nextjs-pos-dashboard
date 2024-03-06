@@ -1,5 +1,5 @@
 import { SuppliersTable } from '@/app/lib/suppliers/definitions';
-import { ActivateCompanyBtn, DeactivateCompanyBtn } from '@/app/ui/suppliers/buttons'
+import { UpdateSupplier, DeleteSupplier } from '@/app/ui/suppliers/buttons'
 import { fetchFilteredSuppliers } from "@/app/lib/suppliers/data";
 
 export default async function SuppliersTable({
@@ -10,7 +10,7 @@ export default async function SuppliersTable({
   currentPage: number;
 }) {
 
-  const Suppliers = await fetchFilteredSuppliers(query, currentPage);
+  const suppliers = await fetchFilteredSuppliers(query, currentPage);
   return (
 
     <div className="mt-6 flow-root">
@@ -18,7 +18,7 @@ export default async function SuppliersTable({
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden rounded-md bg-gray-50 p-2 md:pt-0">
             <div className="md:hidden">
-              {Suppliers?.map((supplier) => (
+              {suppliers?.map((supplier) => (
                 <div
                   key={supplier.id}
                   className="mb-2 w-full rounded-md bg-white p-4"
@@ -63,8 +63,8 @@ export default async function SuppliersTable({
                 </tr>
               </thead>
 
-              <tbody className="divide-y divide-gray-200 text-gray-900">
-                {Suppliers.map((supplier) => (
+              <tbody className="bg-white divide-y divide-gray-200 text-gray-900">
+                {suppliers.map((supplier) => (
                   <tr key={supplier.id} className="group">
                     <td className="whitespace-nowrap bg-white py-5 pl-4 pr-3 text-sm text-black group-first-of-type:rounded-md group-last-of-type:rounded-md sm:pl-6">
                       <div className="flex items-center gap-3">
@@ -92,7 +92,8 @@ export default async function SuppliersTable({
                     </td>
                     <td className="whitespace-nowrap py-1 pr-3">
                       <div className="flex justify-end gap-2">
-
+                        <UpdateSupplier id={supplier.id} />
+                        <DeleteSupplier id={supplier.id} />
                       </div>
                     </td>
                   </tr>
