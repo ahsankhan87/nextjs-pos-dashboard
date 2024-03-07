@@ -1,4 +1,4 @@
-import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PencilIcon, PlusIcon, PrinterIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { deleteInvoice } from '@/app/lib/invoices/actions';
 
@@ -36,5 +36,16 @@ export function DeleteInvoice({ id }: { id: string }) {
         </button>
       </form>
     </>
+  );
+}
+
+export function PrintInvoice({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/invoices/${id}/receipt`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
+      <PrinterIcon className="w-5" />
+    </Link>
   );
 }

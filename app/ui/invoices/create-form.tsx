@@ -20,7 +20,6 @@ import CustomerPopupComponent from '../customers/create-customer-popup';
 
 export default function Form({ customers, products }: { customers: CustomerField[], products: ProductsTable[] }) {
 
-  const { pending } = useFormStatus()
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createInvoice, initialState);
 
@@ -31,7 +30,7 @@ export default function Form({ customers, products }: { customers: CustomerField
     // Simulated function to add customer
     // Replace with actual API call to add customer
     //console.log(JSON.stringify(newCustomer));
-    
+
     try {
       const data = newCustomer;
       setAllCustomers([...allCustomers, data]);
@@ -44,7 +43,7 @@ export default function Form({ customers, products }: { customers: CustomerField
 
   const [rows, setRows] = useState([{ id: 1, productId: '', quantity: 1, costPrice: 0, unitPrice: 0 }]);
 
-  //set status checkbox checked
+  //set status checkbox checked by default
   const [selectedProductStatus, setSelectedProductStatus] = useState('pending');
   const handleProductStatusChange = (event: any) => {
     setSelectedProductStatus(event.target.value);
@@ -99,7 +98,7 @@ export default function Form({ customers, products }: { customers: CustomerField
   const handleSubmit = async (formData: FormData) => {
 
     try {
-      console.log(formData.get('customerId'));
+
       if (rows.length > 0 && rows[0].productId) {
         const formData_1: InvoiceForm | unknown = {
           customerId: formData.get('customerId'),
@@ -155,7 +154,7 @@ export default function Form({ customers, products }: { customers: CustomerField
                 <option value="" disabled>
                   Select a customer
                 </option>
-                <option value="NEW-CUSTOMER" className='text-blue-500'>Add New Customer</option>
+                <option value="NEW-CUSTOMER" className='text-blue-500 font-bold'>Add New Customer</option>
                 {allCustomers.map((customer) => (
                   <option key={customer.customerId} value={customer.customerId}>
                     {customer.first_name}
@@ -164,14 +163,14 @@ export default function Form({ customers, products }: { customers: CustomerField
               </select>
               <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
             </div>
-            <button
+            {/* <button
               type='button'
               onClick={() => setShowCustomerCreateModal(true)}
               className="flex bg-blue-500 text-white px-2 py-2 rounded-md hover:bg-blue-600"
             >
               <PlusCircleIcon className='h-[18px] w-[18px] mt-1' />
               Add New Customer
-            </button>
+            </button> */}
 
             <div id="customer-error" aria-live="polite" aria-atomic="true">
               {state.errors?.customerId &&
@@ -348,11 +347,21 @@ export default function Form({ customers, products }: { customers: CustomerField
           >
             Cancel
           </Link>
-          <Button type="submit" disabled={pending}>
-            {pending ? 'Loading...' : 'Create Invoice'}</Button>
+
+          <SubmitButton />
         </div>
       </form >
     </>
 
+  );
+}
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" aria-disabled={pending}>
+      {pending ? 'Loading...' : 'Create Invoice'}
+    </Button>
   );
 }

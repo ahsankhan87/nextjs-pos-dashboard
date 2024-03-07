@@ -3,7 +3,8 @@
 import React, { useState, FormEvent } from 'react';
 import { CustomerField } from '../../lib/definitions';
 import { createCustomerModal, getLastInsertID } from '@/app/lib/customers/actions';
-import { useFormState } from 'react-dom';
+import { useFormState, useFormStatus } from 'react-dom';
+import { Button } from '@/app/ui/button';
 
 interface PopupProps {
   addCustomer: (newCustomer: CustomerField) => void;
@@ -14,7 +15,6 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
   const initialState = { message: null, errors: {} };
   const [state, dispatch] = useFormState(createCustomerModal, initialState);
 
-  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
 
   const [customerId, setCustomerId] = useState('');
@@ -26,7 +26,6 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
   const handleCustomerSubmit = async (formData: FormData) => {
     // e.preventDefault();
 
-    setIsLoading(true)
     setError(null) // Clear previous errors when a new request starts
     try {
       // const formData = new FormData(e.currentTarget)
@@ -48,7 +47,6 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
       setError(error.message)
       console.error(error)
     } finally {
-      setIsLoading(false)
     }
   };
 
@@ -127,13 +125,8 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
                 >
                   Close
                 </button>
-                <button
-                  className="bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
-                  type="submit"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Loading...' : 'Save Changes'}
-                </button>
+
+                <SubmitButton />
               </div>
             </form>
           </div>
@@ -146,3 +139,13 @@ const CustomerPopupComponent: React.FC<PopupProps> = ({ addCustomer, onClose }) 
 };
 
 export default CustomerPopupComponent;
+
+function SubmitButton() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button type="submit" aria-disabled={pending}>
+      {pending ? 'Loading...' : 'Save Changes'}
+    </Button>
+  );
+}

@@ -39,8 +39,6 @@ const CreateInvoice = FormSchema.omit({ id: true, date: true });
 
 export async function createInvoice(prevState: State, formData: InvoiceForm | any) {
 
-  console.log(formData);
-
   // Validate form using Zod
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.customerId,
@@ -70,19 +68,30 @@ export async function createInvoice(prevState: State, formData: InvoiceForm | an
           VALUES ('${customerId}', '${total_amount}', '${status}', '${sale_date}', '${due_date}','21')
         `);
 
+    const lastInsertId: any = await executeQuery(`
+        SELECT LAST_INSERT_ID()
+    `);
+    const invoiceLastInsertID: string = lastInsertId[0]['LAST_INSERT_ID()']
+
     for (const entry of formData.details) {
       await executeQuery(`
           INSERT INTO pos_invoices_items (sale_id,invoice_no,item_id, quantity_sold,item_cost_price,item_unit_price,company_id)
-          VALUES ('${entry.id}','${entry.id}','${entry.productId}', 
-          '${entry.quantity}',1,'${entry.unitPrice}','21')
+          VALUES ('${invoiceLastInsertID}','${invoiceLastInsertID}','${entry.productId}', 
+          '${entry.quantity}','${entry.costPrice}','${entry.unitPrice}','21')
         `);
 
+      //get total quantity of the project and add/substract with sale qty
       const total_quantity: number = await fetchTotalStock(entry.productId);
-      console.log(total_quantity);
 
       await executeQuery(`UPDATE pos_items_detail
           SET quantity = '${(total_quantity - entry.quantity)}'
           WHERE id = '${entry.productId}'
+        `);
+
+      //inventory table
+      await executeQuery(`
+          INSERT INTO pos_inventory (trans_user,invoice_no,trans_item, trans_inventory,cost_price,unit_price,company_id,trans_comment)
+          VALUES ('${entry.id}','${invoiceLastInsertID}','${entry.productId}', '${entry.quantity}','${entry.costPrice}','${entry.unitPrice}','21','${status}')
         `);
     }
 
