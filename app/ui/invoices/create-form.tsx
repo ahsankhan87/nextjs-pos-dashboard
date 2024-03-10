@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { ProductsTable } from '../../lib/products/definitions';
 import { InvoiceForm, CustomerField } from '../../lib/definitions';
 import CustomerPopupComponent from '../customers/create-customer-popup';
+import { number } from 'zod';
 
 export default function Form({ customers, products }: { customers: CustomerField[], products: ProductsTable[] }) {
 
@@ -91,6 +92,13 @@ export default function Form({ customers, products }: { customers: CustomerField
     }
   };
 
+  const [totalTaxAmount, setTotalTaxAmount] = useState(0);
+  const handleTaxChange = async (taxRate: string) => {
+    let total_tax: number = (parseFloat(taxRate) * total_amount / 100);
+    total_tax = (total_tax ? total_tax : 0);
+    setTotalTaxAmount(total_tax);
+  };
+
   const total_amount = (rows.map((product) => {
     return product.unitPrice * product.quantity
   }).reduce((a, b) => a + b, 0));
@@ -100,13 +108,14 @@ export default function Form({ customers, products }: { customers: CustomerField
     try {
 
       if (rows.length > 0 && rows[0].productId) {
-        const formData_1: InvoiceForm | unknown = {
+        const formData_1: InvoiceForm | any = {
           customerId: formData.get('customerId'),
           //amount: formData.get('amount'),
           status: formData.get('status'),
           sale_date: formData.get('sale_date'),
           due_date: formData.get('due_date'),
           total_amount: formData.get('total_amount'),
+          total_tax: formData.get('totalTaxAmount'),
           details: rows,
         };
         // // Call server action to create invoice
@@ -332,7 +341,37 @@ export default function Form({ customers, products }: { customers: CustomerField
                 ))
               }
               <tr>
-                <th colSpan={4} className='text-right'>Total</th>
+                <th colSpan={4} className='text-right'>
+                  <select
+                    onChange={(e) => handleTaxChange(e.target.value)}
+                    id="tax"
+                    name="tax"
+                    className="peer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                    aria-describedby="tax-error"
+                  >
+                    <option value="0">No Tax</option>
+                    <option value="15">15% GST</option>
+                    <option value="7.5">7.5% GST</option>
+                  </select>
+                  {state.errors?.total_tax &&
+                    state.errors.total_tax.map((error: string) => (
+                      <p className="mt-2 text-sm text-red-500" key={error}>
+                        {error}
+                      </p>
+                    ))}
+                </th>
+                <th>{totalTaxAmount}</th>
+                <th><input type="hidden" name='totalTaxAmount' value={totalTaxAmount} /></th>
+              </tr>
+              <tr>
+                <th colSpan={4} className='text-right'>Total
+                  {state.errors?.total_amount &&
+                    state.errors.total_amount.map((error: string) => (
+                      <p className="mt-2 text-sm text-red-500" key={error}>
+                        {error}
+                      </p>
+                    ))}
+                </th>
                 <th>{total_amount}</th>
                 <th><input type="hidden" name='total_amount' value={total_amount} /></th>
               </tr>

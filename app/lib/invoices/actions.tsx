@@ -23,11 +23,13 @@ const FormSchema = z.object({
   date: z.string(),
   sale_date: z.string(),
   due_date: z.string(),
+  total_tax: z.string(),
 });
 export type State = {
   errors?: {
     customerId?: string[];
     total_amount?: string[];
+    total_tax?: string[];
     status?: string[];
     sale_date?: string[];
     due_date?: string[];
@@ -43,6 +45,7 @@ export async function createInvoice(prevState: State, formData: InvoiceForm | an
   const validatedFields = CreateInvoice.safeParse({
     customerId: formData.customerId,
     total_amount: formData.total_amount,
+    total_tax: formData.total_tax,
     status: formData.status,
     sale_date: formData.sale_date,
     due_date: formData.due_date,
@@ -57,15 +60,15 @@ export async function createInvoice(prevState: State, formData: InvoiceForm | an
   }
 
   // Prepare data for insertion into the database
-  const { customerId, total_amount, status, sale_date, due_date } = validatedFields.data;
+  const { customerId, total_amount, total_tax, status, sale_date, due_date } = validatedFields.data;
   //const amountInCents = total_amount * 100;
   //const date = new Date().toISOString().split('T')[0];
 
   try {
 
     await executeQuery(`
-          INSERT INTO pos_invoices (customer_id, total_amount, status, sale_date,due_date,company_id)
-          VALUES ('${customerId}', '${total_amount}', '${status}', '${sale_date}', '${due_date}','21')
+          INSERT INTO pos_invoices (customer_id, total_amount,total_tax, status, sale_date,due_date,company_id)
+          VALUES ('${customerId}', '${total_amount}','${total_tax}',  '${status}', '${sale_date}', '${due_date}','21')
         `);
 
     const lastInsertId: any = await executeQuery(`

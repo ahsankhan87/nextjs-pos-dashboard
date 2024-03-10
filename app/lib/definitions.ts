@@ -107,11 +107,26 @@ export type CustomerField = {
 export type InvoiceForm = {
   sale_id: string;
   customerId: string;
+  first_name: string;
+  email: string;
+  phone_no: string;
+  address: string;
   amount: number;
   total_amount: number;
+  total_tax: number;
+  net_amount: number;
   status: 'pending' | 'paid';
   sale_date: string;
   due_date: string;
 };
 
+export type InvoiceDetailForm = {
+  sale_id: string;
+  item_id: string;
+  item_name: string;
+  item_cost_price: number;
+  item_unit_price: number;
+  quantity: number;
+  discount_value: number;
+};
 

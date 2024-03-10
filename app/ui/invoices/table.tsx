@@ -1,10 +1,7 @@
-import Image from 'next/image';
-import { UpdateInvoice, DeleteInvoice, PrintInvoice } from '@/app/ui/invoices/buttons';
+import { UpdateInvoice, DeleteInvoice, ActionInvoiceDDL } from '@/app/ui/invoices/buttons';
 import InvoiceStatus from '@/app/ui/invoices/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
 import { fetchFilteredInvoices } from '@/app/lib/invoices/data';
-import Link from 'next/link';
-import { PrinterIcon } from '@heroicons/react/20/solid';
 
 export default async function InvoicesTable({
   query,
@@ -109,11 +106,13 @@ export default async function InvoicesTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     <InvoiceStatus status={invoice.status} />
                   </td>
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <div className="flex justify-end gap-3">
-                      <PrintInvoice id={invoice.sale_id} />
+                  <td className="whitespace-nowrap py-1 pl-6 pr-3">
+                    {/* <div className="h-screen grid place-items-center bg-gradient-to-r from-sky-600 to-indigo-600"></div> */}
+                    <div className="flex justify-end">
+                      <ActionInvoiceDDL id={invoice.sale_id} />
+                      {/* <PrintInvoice id={invoice.sale_id} />
                       <UpdateInvoice id={invoice.sale_id} />
-                      <DeleteInvoice id={invoice.sale_id} />
+                      <DeleteInvoice id={invoice.sale_id} /> */}
                     </div>
                   </td>
                 </tr>

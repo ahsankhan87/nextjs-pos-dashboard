@@ -10,6 +10,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  InvoiceDetailForm,
 } from '../definitions';
 import { formatCurrency } from '../utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -91,7 +92,7 @@ export async function fetchCardData() {
   }
 }
 
-const ITEMS_PER_PAGE = 6;
+const ITEMS_PER_PAGE = 12;
 export async function fetchFilteredInvoices(
   query: string,
   currentPage: number,
@@ -155,12 +156,21 @@ export async function fetchInvoiceById(id: string) {
   try {
     const data = await executeQuery<InvoiceForm>(`
       SELECT
-        pos_invoices.sale_id,
-        pos_invoices.customer_id,
-        pos_invoices.total_amount,
-        pos_invoices.description as status
-      FROM pos_invoices
-      WHERE pos_invoices.sale_id = ${id};
+        i.sale_id,
+        i.sale_date,
+        i.due_date,
+        i.customer_id,
+        i.total_amount,
+        i.total_tax,
+        SUM(i.total_amount + i.total_tax) As net_amount,
+        i.status,
+        c.first_name,
+        c.address,
+        c.phone_no,
+        c.email
+      FROM pos_invoices AS i 
+      LEFT JOIN pos_customers AS c ON i.customer_id = c.id
+      WHERE i.sale_id = ${id};
     `);
 
     const invoice = data.map((invoice) => ({
@@ -170,6 +180,36 @@ export async function fetchInvoiceById(id: string) {
     }));
     // Invoice is an empty array []
     return invoice[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+  }
+}
+
+export async function fetchInvoiceDetailBySaleId(id: string) {
+  noStore();
+  try {
+    const data = await executeQuery<InvoiceDetailForm>(`
+      SELECT
+        ii.sale_id,
+        ii.item_id,
+        ii.quantity_sold AS quantity,
+        ii.item_cost_price,
+        ii.item_unit_price,
+        ii.discount_value,
+        item.name as item_name
+
+      FROM pos_invoices_items AS ii 
+      LEFT JOIN pos_items_detail AS item ON ii.item_id = item.id
+      WHERE ii.sale_id = ${id};
+    `);
+
+    // const invoice = data.map((invoice) => ({
+    //   ...invoice,
+    //   // Convert amount from cents to dollars
+    //   amount: invoice.total_amount / 100,
+    // }));
+    // Invoice is an empty array []
+    return data;
   } catch (error) {
     console.error('Database Error:', error);
   }
